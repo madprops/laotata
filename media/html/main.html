@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+    <title>{{title}}</title>
+    <link rel="shortcut icon" href="/media/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon"> 
+    <link rel='stylesheet' href='/media/css/style.css'>
+    <script src='/media/js/jquery.js'></script>
+    <script src='/media/js/nicescroll.js'></script>
+    <script type="text/javascript" src="/media/js/mousewheel.js"></script>
+    <script type="text/javascript" src="/media/js/touchevents.js"></script>
+    <script type="text/javascript" src="/media/js/base.js"></script>
+    <script>
+        $(function()
+        {
+            channel = "{{channel}}";
+            csrf_token = '{{csrf_token}}';
+            init();
+        })
+    </script>
+</head>
+<body>
+    <div class="unselectable" id="header">
+        <div id="channels">
+            {% if title == "green" %}
+                <a class="headerx" href="/green">green</a>
+            {% else %}
+                <a class="header" href="/green">green</a>
+            {% endif %}
+            {% if title == "blue" %}
+                <a class="headerx" href="/blue">blue</a>
+            {% else %}
+                <a class="header" href="/blue">blue</a>
+            {% endif %}
+            {% if title == "red" %}
+                <a class="headerx" href="/red">red</a>
+            {% else %}
+                <a class="header" href="/red">red</a>
+            {% endif %}
+        </div>
+        <div id='nav'>
+            <a class="header" onClick="prev();return false;" href="#">< prev</a>
+            <a class="header" onClick="to_top();return false;" href="#">top</a>
+            <a class="header" onClick="reply();return false;" href="#">reply</a>
+            <a class="header" onClick="next();return false;" href="#">next ></a>
+        </div>
+    </div>
+
+    <div id="left">
+
+        <div id="inner_left">
+
+            <div class="form_container">
+                <form enctype="multipart/form-data" name="form" method="post" action="" onsubmit="return validate_submit()" > {% csrf_token %}
+                    <input accept="audio/ogg, image/jpg, image/jpeg, image/gif, image/png" id="file" type='file' name="file"> 
+                    <br>   
+                    <textarea id ="text" name="text" class="input" rows="4"></textarea>
+                    <br>
+                    <div style='margin-left:-1px'><input class="submit" value="submit" type="submit"></div>
+                </form>
+            </div>
+
+            <div id="posts">
+                {%for p in posts%}
+                    <div class="post">
+                        {% if post.extension == 'ogg' %}
+                            <div><div><audio class="file" src='/media/f/{{p.id}}.ogg' controls></audio></div></div>
+                        {% else %}
+                            <div><a target="_blank" href='/media/f/{{p.id}}.{{p.extension}}'><img class="unselectable file" src='/media/f/{{p.id}}.{{p.extension}}'></a></div>
+                        {% endif %}
+                        <div class="text">{{p.text}}</div>
+                        <div style="visibility:hidden" class="post_id">{{p.id}}</div>
+                    </div>
+                {%endfor%}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div id="right">
+
+        <div id="inner_right">
+
+            <div id='replies'></div>
+
+            <div class="form_ans_container">
+                <form id="reply_form" name="reply_form">
+                <textarea id ="reply_input_text" name="reply_input_text" class="input" rows="4"></textarea>
+                <br>
+                <div style='margin-right:-6px'><input class="submit" value="reply" type="submit"></div>    
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
